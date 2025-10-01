@@ -1,0 +1,36 @@
+
+-- this will go in a ModuleScript
+
+local Physics = {}
+
+Physics.Gravity = Vector3.new(0, -196.2, 0)
+
+function Physics:ApplyGravity(part, deltaTime)
+    if part and part:IsA("BasePart") and not part.Anchored then
+        local velocity = part.Velocity + self.Gravity * deltaTime
+        part.Velocity = velocity
+    end
+end
+
+-- Simple collision detection between two parts (AABB)
+function Physics:CheckCollision(partA, partB)
+    if not (partA and partB) then return false end
+    local aMin = partA.Position - partA.Size/2
+    local aMax = partA.Position + partA.Size/2
+    local bMin = partB.Position - partB.Size/2
+    local bMax = partB.Position + partB.Size/2
+
+    return (aMin.X <= bMax.X and aMax.X >= bMin.X) and
+           (aMin.Y <= bMax.Y and aMax.Y >= bMin.Y) and
+           (aMin.Z <= bMax.Z and aMax.Z >= bMin.Z)
+end
+
+
+function Physics:Step(parts, deltaTime)
+    for _, part in ipairs(parts) do
+        self:ApplyGravity(part, deltaTime)
+    end
+    -- Collision resolution can be added here
+end
+
+return Physics
