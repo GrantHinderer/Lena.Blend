@@ -1,0 +1,19 @@
+-- Model Flipper: Flip a 3D model by 90 degrees around the Y axis
+-- Assumes model is a table of vertices: { {x=..., y=..., z=...}, ... }
+
+local function flip_model_90_deg_y(vertices)
+    local cos90 = 0
+    local sin90 = 1
+    for _, v in ipairs(vertices) do
+        local x_new = v.x * cos90 + v.z * sin90
+        local z_new = -v.x * sin90 + v.z * cos90
+        v.x = x_new
+        v.z = z_new
+    end
+    return vertices
+end
+
+-- Example usage:
+-- local model = { {x=1, y=2, z=3}, {x=4, y=5, z=6} }
+-- local flipped = flip_model_90_deg_y(model)
+-- print(flipped[1].x, flipped[1].y, flipped[1].z)
